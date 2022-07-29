@@ -1,11 +1,18 @@
+# dependecies
+/node_modules
+
+# other files
 .DS_Store
 .idea
 *.ai
 *.log
 *.pdf
 *.psd
+
 *.sublime*
-build/
-node_modules/
+
+# production
+/build
+
 npm-debug.log*
 Thumbs.db
