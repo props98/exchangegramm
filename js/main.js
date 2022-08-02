@@ -30,7 +30,7 @@ let names = [
     'Mike',
     'April',
     'Sara',
-    'Mka',
+    'Mel',
     'Steve',
 ];
 
@@ -55,15 +55,16 @@ let generatePictureData = function(pictureIndex) {
     return {
         url: `photos/${pictureIndex}.jpg`,
         likes: getRandomNum(LIKES.min, LIKES.max),
-        comments: getRandomArr(COMMENTS),
-        description: getRandomArr(DESCRIPTION)
+        comment: getRandomArr(COMMENTS),
+        description: getRandomArr(DESCRIPTION),
+        name: getRandomArr(names)
     }
 };
 
-//* Cоздаем нужное количество данных о фотографиях
+//* Cоздаем нужное количество фотографий и данных о фотографиях
 let generatePicturePreview = function(pictureQuantity) {
     let picturesItem = [];
-    for (let i = 0; i < pictureQuantity; i++) {
+    for (let i = 1; i < pictureQuantity; i++) {
         picturesItem[i] = generatePictureData(i);
     }
     return picturesItem;
@@ -71,4 +72,13 @@ let generatePicturePreview = function(pictureQuantity) {
 
 let pictures = generatePicturePreview(QUANTITY_PICTURES);
 
-console.log(pictures);
+// console.log(pictures[1]);
+// console.log(pictures);
+
+//* Выводим данные о фотографии на страницу
+let generatePicturesInfo = function(pictureItem) {
+    let previewElement = pictureTemplate.querySelector('.picture__link').cloneNode(true);
+    previewElement.querySelector('.picture__img').src = pictureItem.url;
+};
+
+console.log(generatePicturesInfo(pictures[0]));
