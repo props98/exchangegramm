@@ -36,8 +36,8 @@ let names = [
 
 //* Получение элементов со страницы
 let fragment = document.createDocumentFragment();
-let pictureContainer = document.querySelector('#picture').content;
-let pictureTemplate = document.querySelector('.pictures');
+let pictureContainer = document.querySelector('.pictures');
+let pictureTamplate = document.querySelector('#picture').content;
 let bigPicture = document.querySelector('.big-picture');
 
 //* Получение рандомного индекса
@@ -64,7 +64,7 @@ let generatePictureData = function(pictureIndex) {
 //* Cоздаем нужное количество фотографий и данных о фотографиях
 let generatePicturePreview = function(pictureQuantity) {
     let picturesItem = [];
-    for (let i = 1; i < pictureQuantity; i++) {
+    for (let i = 1; i <= pictureQuantity; i++) {
         picturesItem[i] = generatePictureData(i);
     }
     return picturesItem;
@@ -76,9 +76,21 @@ let pictures = generatePicturePreview(QUANTITY_PICTURES);
 // console.log(pictures);
 
 //* Выводим данные о фотографии на страницу
-let generatePicturesInfo = function(pictureItem) {
-    let previewElement = pictureTemplate.querySelector('.picture__link').cloneNode(true);
-    previewElement.querySelector('.picture__img').src = pictureItem.url;
+let generatePicturesInfo = function(picturesItem) {
+    let previewElement = pictureTamplate.querySelector('.picture__link').cloneNode(true);
+    previewElement.querySelector('.picture__img').src = picturesItem.url;
+    previewElement.querySelector('.picture__stat--comments').textContent = picturesItem.comment;
+    previewElement.querySelector('.picture__stat--likes').textContent = picturesItem.likes;
+    return previewElement;
 };
 
-console.log(generatePicturesInfo(pictures[0]));
+//* Добовляем фото на страницу
+let renderPictures = function() {
+    for (let i = 1; i <= QUANTITY_PICTURES; i++) {
+        fragment.appendChild(generatePicturesInfo(pictures[i]));
+    }
+    pictureContainer.appendChild(fragment);
+};
+
+renderPictures();
+
