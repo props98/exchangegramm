@@ -60,4 +60,15 @@ let generatePictureData = function(pictureIndex) {
     }
 };
 
-console.log(generatePictureData(1));
+//* Cоздаем нужное количество данных о фотографиях
+let generatePicturePreview = function(pictureQuantity) {
+    let picturesItem = [];
+    for (let i = 0; i < pictureQuantity; i++) {
+        picturesItem[i] = generatePictureData(i);
+    }
+    return picturesItem;
+};
+
+let pictures = generatePicturePreview(QUANTITY_PICTURES);
+
+console.log(pictures);
