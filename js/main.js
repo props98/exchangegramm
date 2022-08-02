@@ -36,3 +36,8 @@ let bigPicture = document.querySelector('.big-picture');
 let randomIndex = function(min, max) {
     return Math.round(Math.random() * (max - min) + min);
 };
+
+//* Получение рандомого элемента из массива
+let randomArrElem = function(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+};
