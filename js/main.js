@@ -16,7 +16,14 @@ const COMMENTS = [
     'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const DESCRIPTION = [];
+const DESCRIPTION = [
+    'Тестим новую камеру!',
+    'Затусили с друзьями на море',
+    'Как же круто тут кормят',
+    'Отдыхаем...',
+    'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
+    'Вот это тачка!'
+];
 
 let names = [
     'Jhon',
@@ -27,17 +34,30 @@ let names = [
     'Steve',
 ];
 
+//* Получение элементов со страницы
 let fragment = document.createDocumentFragment();
 let pictureContainer = document.querySelector('#picture').content;
 let pictureTemplate = document.querySelector('.pictures');
 let bigPicture = document.querySelector('.big-picture');
 
 //* Получение рандомного индекса
-let randomIndex = function(min, max) {
+let getRandomNum = function(min, max) {
     return Math.round(Math.random() * (max - min) + min);
 };
 
 //* Получение рандомого элемента из массива
-let randomArrElem = function(arr) {
+let getRandomArr = function(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 };
+
+//* Создаем данные фотографии
+let generatePictureData = function(pictureIndex) {
+    return {
+        url: `photos/${pictureIndex}.jpg`,
+        likes: getRandomNum(LIKES.min, LIKES.max),
+        comments: getRandomArr(COMMENTS),
+        description: getRandomArr(DESCRIPTION)
+    }
+};
+
+console.log(generatePictureData(1));
