@@ -7,6 +7,8 @@ const LIKES = {
     max: 200
 };
 
+const AVATARS = 6;
+
 const COMMENTS = [
     'Всё отлично!',
     'В целом всё неплохо. Но не всё.',
@@ -50,14 +52,27 @@ let getRandomArr = function(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 };
 
-//* Создаем данные фотографии
+let generateRandomComment = function(source) {
+    let comments = [];
+    let commentsQuantity = getRandomNum(1, source.length);
+    let commentsLength = getRandomNum(1, 2);
+    for (let i = 1; i < commentsQuantity; i++) {
+        comments[i] = '';
+        for (let j = 1; j < commentsLength; j++) {
+            comments[i] = getRandomArr(source);
+        }
+    }
+    return comments;
+};
+
+//* Создаем рандомные данные фотографии
 let generatePictureData = function(pictureIndex) {
     return {
         url: `photos/${pictureIndex}.jpg`,
         likes: getRandomNum(LIKES.min, LIKES.max),
-        comment: getRandomArr(COMMENTS),
-        description: getRandomArr(DESCRIPTION),
-        name: getRandomArr(names)
+        comment: generateRandomComment(COMMENTS),
+        description: getRandomArr(DESCRIPTION)
+        // name: getRandomArr(names)
     }
 };
 
@@ -72,19 +87,18 @@ let generatePicturePreview = function(pictureQuantity) {
 
 let pictures = generatePicturePreview(QUANTITY_PICTURES);
 
-// console.log(pictures[1]);
-// console.log(pictures);
-
-//* Выводим данные о фотографии на страницу
+//* Подставление сгенерированных данных о фотографии на страницу
 let generatePicturesInfo = function(picturesItem) {
+    //* Клубокое клонирование cloneNode
     let previewElement = pictureTamplate.querySelector('.picture__link').cloneNode(true);
+    //* подставление данных
     previewElement.querySelector('.picture__img').src = picturesItem.url;
     previewElement.querySelector('.picture__stat--comments').textContent = picturesItem.comment;
     previewElement.querySelector('.picture__stat--likes').textContent = picturesItem.likes;
     return previewElement;
 };
 
-//* Добовляем фото на страницу
+//* Добавляем фото с сгенерированными данными на страницу
 let renderPictures = function() {
     for (let i = 1; i <= QUANTITY_PICTURES; i++) {
         fragment.appendChild(generatePicturesInfo(pictures[i]));
@@ -92,5 +106,28 @@ let renderPictures = function() {
     pictureContainer.appendChild(fragment);
 };
 
-renderPictures();
+let showBigPicture = function(picture) {
+    let commentsContainer = bigPicture.querySelector('.social__comments');
+    let commentTemplate = bigPicture.querySelector('.social__comment');
 
+    bigPicture.classList.remove('hidden');
+    bigPicture.querySelector('.big-picture__img img').src = picture.url;
+    bigPicture.querySelector('.likes-count').textContent = picture.likes;
+    bigPicture.querySelector('.comments-count').textContent = picture.comment.length;
+
+    commentsContainer.innerHTML = '';
+    let commentsFragment = document.createDocumentFragment();
+    for (let i = 0; i < picture.comment.length; i++) {
+        commentTemplate.querySelector('.social__picture').src = `img/avatar-${getRandomNum(1, AVATARS)}.svg`
+        commentTemplate.querySelector('.social__text').textContent = picture.comment[i];
+        commentTemplate.appendChild(commentTemplate.cloneNode(true));
+    }
+    commentsContainer.appendChild(commentsFragment);
+
+    bigPicture.querySelector('.social__caption').textContent = picture.description;
+    bigPicture.querySelector('.social__comment-count').classList.add('visually-hidden');
+    bigPicture.querySelector('.social__loadmore').classList.add('visually-hidden');
+};
+
+renderPictures();
+showBigPicture(pictures[10]);
