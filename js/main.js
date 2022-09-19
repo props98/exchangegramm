@@ -191,3 +191,6 @@ pictureClose.addEventListener('keydown', (evt) => {
         closeBigPhoto();
     }
 });
+
+
+//TODO Сделать меню рудоктирования фото « #upload-file »
