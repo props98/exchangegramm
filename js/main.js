@@ -8,6 +8,8 @@ const LIKES = {
 };
 
 const AVATARS = 6;
+const ESC_KEYCODE = 27;
+const ENTER_KEYCODE = 13;
 
 const COMMENTS = [
     'Всё отлично!',
@@ -39,8 +41,11 @@ let names = [
 //* Получение элементов со страницы
 let fragment = document.createDocumentFragment();
 let pictureContainer = document.querySelector('.pictures');
-let pictureTamplate = document.querySelector('#picture').content;
 let bigPicture = document.querySelector('.big-picture');
+
+let pictureTamplate = document.querySelector('#picture').content;
+let picturesContainer = document.querySelector('.pictures');
+let pictureClose = document.querySelector('#picture-cancel');
 
 //* Получение рандомного индекса
 let getRandomNum = function(min, max) {
@@ -85,7 +90,14 @@ let generatePicturePreview = function(pictureQuantity) {
     return picturesItem;
 };
 
+
 let pictures = generatePicturePreview(QUANTITY_PICTURES);
+
+// console.log(pictures[1].comment.length);
+// pictures.forEach(picture => {
+//     console.log(picture.url);
+// });
+
 
 //* Подставление сгенерированных данных о фотографии на страницу
 let generatePicturesInfo = function(picturesItem) {
@@ -99,12 +111,12 @@ let generatePicturesInfo = function(picturesItem) {
 };
 
 //* Добавляем фото с сгенерированными данными на страницу
-let renderPictures = function() {
-    for (let i = 1; i <= QUANTITY_PICTURES; i++) {
-        fragment.appendChild(generatePicturesInfo(pictures[i]));
-    }
-    pictureContainer.appendChild(fragment);
-};
+// let renderPictures = function() {
+//     for (let i = 1; i <= QUANTITY_PICTURES; i++) {
+//         fragment.appendChild(generatePicturesInfo(pictures[i]));
+//     }
+//     pictureContainer.appendChild(fragment);
+// };
 
 let showBigPicture = function(picture) {
     let commentsContainer = bigPicture.querySelector('.social__comments');
@@ -129,5 +141,53 @@ let showBigPicture = function(picture) {
     bigPicture.querySelector('.social__loadmore').classList.add('visually-hidden');
 };
 
+// renderPictures();
+// showBigPicture(pictures[10]);
+
+//* Module4-task2
+
+function onBigPhotoEscPress(e) {
+    if (e.keyCode === ESC_KEYCODE) {
+        e.preventDefault();
+        closeBigPhoto();
+    }
+}
+
+//* Закрытие окна при нажатии клавиши или крестика
+function closeBigPhoto() {
+    bigPicture.classList.add('hidden');
+    document.removeEventListener('keydown', onBigPhotoEscPress);
+}
+
+//* Генерация контента на выбраной фотографии
+function generatePictures(picturesItem) {
+    let previewElement = pictureTamplate.querySelector('.picture__link').cloneNode(true);
+    previewElement.querySelector('.picture__img').src = picturesItem.url;
+    previewElement.querySelector('.picture__stat--likes').textContent = picturesItem.likes;
+    previewElement.querySelector('.picture__stat--comments').textContent = picturesItem.comment.length;
+    previewElement.addEventListener('click', (evt) => {
+        evt.preventDefault();
+        showBigPicture(picturesItem);
+        document.addEventListener('keydown', onBigPhotoEscPress);
+    });
+    return previewElement;
+}
+
+function renderPictures() {
+    for (let i = 1; i < QUANTITY_PICTURES; i++) {
+        fragment.appendChild(generatePictures(pictures[i]));
+    }
+    picturesContainer.appendChild(fragment);
+}
+
 renderPictures();
-showBigPicture(pictures[10]);
+
+pictureClose.addEventListener('click', () => {
+    closeBigPhoto();
+});
+
+pictureClose.addEventListener('keydown', (evt) => {
+    if (evt.keyCode === ENTER_KEYCODE) {
+        closeBigPhoto();
+    }
+});
