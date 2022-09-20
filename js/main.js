@@ -166,7 +166,6 @@ function closeBigPhoto() {
     document.removeEventListener('keydown', onBigPhotoEscPress);
 }
 
-// TODO  Доделать редактирование фото и загрузка
 //* Редактирования фото « #upload-file »
 function onSettingsPopupEscPress(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -181,13 +180,30 @@ function openSettings() {
 }
 
 function closeSettings() {
-    imageSettings.classList.add('.hidden');
+    imageSettings.classList.add('hidden');
     document.removeEventListener('keydown', onSettingsPopupEscPress);
     uploadImage.value = '';
     resizeControlValue.value = '55%';
     imageUpLoadPreview.style.transform = '';
     imageUpLoadPreview.className = '';
 }
+
+//* Открытие и Закрытие настроек редоктирования фото при нажатии на закрузить фото
+uploadImage.addEventListener('change', () => {
+    openSettings();
+});
+
+uploadCancel.addEventListener('click', () => {
+    closeSettings();
+});
+
+//* Закрытие при фокусе на иконке «закрыть» и нажитии на клавишу Enter
+uploadCancel.addEventListener('keydown', (evt) => {
+    if (evt.keyCode === ENTER_KEYCODE) {
+        closeSettings();
+    }
+});
+
 
 
 //* Генерация контента на выбраной фотографии
