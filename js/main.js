@@ -47,6 +47,26 @@ let pictureTamplate = document.querySelector('#picture').content;
 let picturesContainer = document.querySelector('.pictures');
 let pictureClose = document.querySelector('#picture-cancel');
 
+let uploadImage = pictureContainer.querySelector('#upload-file');
+let imageSettings = pictureContainer.querySelector('.img-upload__overlay');
+let uploadCancel = pictureContainer.querySelector('#upload-cancel');
+let resizeControlMinus = picturesContainer.querySelector('.resize__control--minus');
+let resizeControlPlus = picturesContainer.querySelector('.resize__control--plus');
+let resizeControlValue = picturesContainer.querySelector('.resize__control--value');
+let imageUpLoadPreview = pictureContainer.querySelector('.img-upload__preview');
+let imageUpLoadPreviewImg = imageUpLoadPreview.querySelector('img');
+let effectsList = pictureContainer.querySelector('.effects__list');
+let imageUploadScale = document.querySelector('.img-upload__scale');
+let scalePin = imageUploadScale.querySelector('.scale__pin');
+let scaleLine = imageUploadScale.querySelector('.scale__line');
+let scaleValue = imageUploadScale.querySelector('.scale__value');
+const SCALE = {
+    min: 25,
+    max: 100,
+    step: 25
+};
+
+
 //* Получение рандомного индекса
 let getRandomNum = function(min, max) {
     return Math.round(Math.random() * (max - min) + min);
@@ -110,14 +130,6 @@ let generatePicturesInfo = function(picturesItem) {
     return previewElement;
 };
 
-//* Добавляем фото с сгенерированными данными на страницу
-// let renderPictures = function() {
-//     for (let i = 1; i <= QUANTITY_PICTURES; i++) {
-//         fragment.appendChild(generatePicturesInfo(pictures[i]));
-//     }
-//     pictureContainer.appendChild(fragment);
-// };
-
 let showBigPicture = function(picture) {
     let commentsContainer = bigPicture.querySelector('.social__comments');
     let commentTemplate = bigPicture.querySelector('.social__comment');
@@ -141,11 +153,6 @@ let showBigPicture = function(picture) {
     bigPicture.querySelector('.social__loadmore').classList.add('visually-hidden');
 };
 
-// renderPictures();
-// showBigPicture(pictures[10]);
-
-//* Module4-task2
-
 function onBigPhotoEscPress(e) {
     if (e.keyCode === ESC_KEYCODE) {
         e.preventDefault();
@@ -158,6 +165,30 @@ function closeBigPhoto() {
     bigPicture.classList.add('hidden');
     document.removeEventListener('keydown', onBigPhotoEscPress);
 }
+
+// TODO  Доделать редактирование фото и загрузка
+//* Редактирования фото « #upload-file »
+function onSettingsPopupEscPress(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+        evt.preventDefault();
+        closeSettings();
+    }
+}
+
+function openSettings() {
+    imageSettings.classList.remove('hidden');
+    document.addEventListener('keydown', onSettingsPopupEscPress);
+}
+
+function closeSettings() {
+    imageSettings.classList.add('.hidden');
+    document.removeEventListener('keydown', onSettingsPopupEscPress);
+    uploadImage.value = '';
+    resizeControlValue.value = '55%';
+    imageUpLoadPreview.style.transform = '';
+    imageUpLoadPreview.className = '';
+}
+
 
 //* Генерация контента на выбраной фотографии
 function generatePictures(picturesItem) {
@@ -192,5 +223,3 @@ pictureClose.addEventListener('keydown', (evt) => {
     }
 });
 
-
-//TODO Сделать меню рудоктирования фото « #upload-file »
