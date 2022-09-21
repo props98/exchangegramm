@@ -263,7 +263,7 @@ scalePin.addEventListener('mouseup', () => {
     imageUpLoadPreviewImg.style.filter = effect;
 });
 
-// console.log(effectsList.querySelector('.effects__radio').name);
+//TODO Добавить Влидацию хец-тегов
 
 //* Выбор еффекта для фотографии при помощи удаления и добвления класса
 effectsList.addEventListener('change', (evt) => {
