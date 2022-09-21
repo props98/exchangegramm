@@ -77,6 +77,7 @@ let getRandomArr = function(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 };
 
+//* Генерация рандомного коммента
 let generateRandomComment = function(source) {
     let comments = [];
     let commentsQuantity = getRandomNum(1, source.length);
@@ -90,7 +91,7 @@ let generateRandomComment = function(source) {
     return comments;
 };
 
-//* Создаем рандомные данные фотографии
+//* Создает рандомные данные фотографии
 let generatePictureData = function(pictureIndex) {
     return {
         url: `photos/${pictureIndex}.jpg`,
@@ -101,7 +102,7 @@ let generatePictureData = function(pictureIndex) {
     }
 };
 
-//* Cоздаем нужное количество фотографий и данных о фотографиях
+//* Cоздает нужное количество фотографий и данных о фотографиях
 let generatePicturePreview = function(pictureQuantity) {
     let picturesItem = [];
     for (let i = 1; i <= pictureQuantity; i++) {
@@ -110,14 +111,7 @@ let generatePicturePreview = function(pictureQuantity) {
     return picturesItem;
 };
 
-
 let pictures = generatePicturePreview(QUANTITY_PICTURES);
-
-// console.log(pictures[1].comment.length);
-// pictures.forEach(picture => {
-//     console.log(picture.url);
-// });
-
 
 //* Подставление сгенерированных данных о фотографии на страницу
 let generatePicturesInfo = function(picturesItem) {
@@ -130,6 +124,7 @@ let generatePicturesInfo = function(picturesItem) {
     return previewElement;
 };
 
+//* Показывает большое фото
 let showBigPicture = function(picture) {
     let commentsContainer = bigPicture.querySelector('.social__comments');
     let commentTemplate = bigPicture.querySelector('.social__comment');
@@ -153,6 +148,7 @@ let showBigPicture = function(picture) {
     bigPicture.querySelector('.social__loadmore').classList.add('visually-hidden');
 };
 
+//* Закрывает большое фото при нажатии на клавишу ESC
 function onBigPhotoEscPress(e) {
     if (e.keyCode === ESC_KEYCODE) {
         e.preventDefault();
@@ -160,13 +156,13 @@ function onBigPhotoEscPress(e) {
     }
 }
 
-//* Закрытие окна при нажатии клавиши или крестика
+//* Закрывает окна при нажатии клавиши когда в фокусе кнопка закрытия
 function closeBigPhoto() {
     bigPicture.classList.add('hidden');
     document.removeEventListener('keydown', onBigPhotoEscPress);
 }
 
-//* Редактирования фото « #upload-file »
+//* Функция открытия блока « #upload-file »
 function onSettingsPopupEscPress(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
         evt.preventDefault();
@@ -174,11 +170,13 @@ function onSettingsPopupEscPress(evt) {
     }
 }
 
+//* Открытие окна закрузки и редактирования фотографии
 function openSettings() {
     imageSettings.classList.remove('hidden');
     document.addEventListener('keydown', onSettingsPopupEscPress);
 }
 
+//* Закрытие окна загрузки
 function closeSettings() {
     imageSettings.classList.add('hidden');
     document.removeEventListener('keydown', onSettingsPopupEscPress);
@@ -188,23 +186,22 @@ function closeSettings() {
     imageUpLoadPreview.className = '';
 }
 
-//* Открытие и Закрытие настроек редоктирования фото при нажатии на закрузить фото
+//* Открытие окна загрузки фото и редактирования
 uploadImage.addEventListener('change', () => {
     openSettings();
 });
 
+//* Закрытие окна загрузки и редактирования 
 uploadCancel.addEventListener('click', () => {
     closeSettings();
 });
 
-//* Закрытие при фокусе на иконке «закрыть» и нажитии на клавишу Enter
+//* Закрытие окна загрузки при фокусе кнопки закрыть и нажатии на ENTER
 uploadCancel.addEventListener('keydown', (evt) => {
     if (evt.keyCode === ENTER_KEYCODE) {
         closeSettings();
     }
 });
-
-
 
 //* Генерация контента на выбраной фотографии
 function generatePictures(picturesItem) {
@@ -220,6 +217,7 @@ function generatePictures(picturesItem) {
     return previewElement;
 }
 
+//* Отрисовка нужного количества привью фотографий
 function renderPictures() {
     for (let i = 1; i < QUANTITY_PICTURES; i++) {
         fragment.appendChild(generatePictures(pictures[i]));
@@ -227,12 +225,15 @@ function renderPictures() {
     picturesContainer.appendChild(fragment);
 }
 
+//* Отрисовка
 renderPictures();
 
+//* Закрытие большой фотографии
 pictureClose.addEventListener('click', () => {
     closeBigPhoto();
 });
 
+//* Закрытие большой фотографии при на жатии на ENTER при фокусе на кнопке закрытия
 pictureClose.addEventListener('keydown', (evt) => {
     if (evt.keyCode === ENTER_KEYCODE) {
         closeBigPhoto();
