@@ -113,6 +113,17 @@ let generatePicturePreview = function(pictureQuantity) {
 
 let pictures = generatePicturePreview(QUANTITY_PICTURES);
 
+//* Отрисовка нужного количества привью фотографий
+function renderPictures() {
+    for (let i = 1; i < QUANTITY_PICTURES; i++) {
+        fragment.appendChild(generatePictures(pictures[i]));
+    }
+    picturesContainer.appendChild(fragment);
+}
+
+//* Отрисовка привью фотографий
+renderPictures();
+
 //* Подставление сгенерированных данных о фотографии на страницу
 let generatePicturesInfo = function(picturesItem) {
     //* Клубокое клонирование cloneNode
@@ -203,6 +214,71 @@ uploadCancel.addEventListener('keydown', (evt) => {
     }
 });
 
+//* Функция управлением размера загружаемого изображения
+function resizeImage(sign) {
+    let controlValue = resizeControlValue.value;
+    controlValue = parseInt(controlValue, 10) - SCALE.step * sign;
+    if (controlValue > SCALE.max) {
+        controlValue = SCALE.max;
+    } else if (controlValue < SCALE.min) {
+        controlValue = SCALE.min;
+    }
+    controlValue += '%';
+    resizeControlValue.value = controlValue;
+    imageUpLoadPreview.style.transform = `scale(${(parseInt(controlValue, 10) / 100)})`;
+}
+
+//* Увеличение загружаемого изображения на +25% при клике на « + »
+resizeControlMinus.addEventListener('click', () => {
+    resizeImage(1);
+});
+
+//* Уменьшение загружаемого изображения на -25% при клике на « - »
+resizeControlPlus.addEventListener('click', () => {
+    resizeImage(-1);
+});
+
+//* Функция для отслеживания управления размером изображения
+function getPersentPositionLeft(targetElem, parentElem) {
+    return (targetElem.offsetLeft / parentElem.offsetWidth).toFixed(2);
+}
+
+//*
+scalePin.addEventListener('mouseup', () => {
+    let pinPosition = getPersentPositionLeft(scalePin, scaleLine);
+    let effectName = effectsList.querySelector('.effects__radio').checked.value;
+    let effect = '';
+    scaleValue.setAttribute('value', Math.floor(pinPosition));
+    if (effectName === 'chrome') {
+        effect = `grayscale(${pinPosition})`;
+    } else if (effectName === 'sepia') {
+        effect = `sepia(${pinPosition})`
+    } else if (effectName === 'marvin') {
+        effect = `invert((${pinPosition * 100})%)`;
+    } else if (effectName === 'phobos') {
+        effect = `blur((${(pinPosition * 3)}.${toFixed(2)}px)`;
+    } else if (effectName === 'heat') {
+        effect = `brightness(${(pinPosition * 3)}.${toFixed(2)})`;
+    }
+    imageUpLoadPreviewImg.style.filter = effect;
+});
+
+// console.log(effectsList.querySelector('.effects__radio').name);
+
+//* Выбор еффекта для фотографии при помощи удаления и добвления класса
+effectsList.addEventListener('change', (evt) => {
+    var effectName = evt.target.value;
+    if (effectName === 'none') {
+        imageUploadScale.classList.add('hidden');
+    } else {
+        imageUploadScale.classList.remove('hidden');
+    }
+    imageUpLoadPreviewImg.className = '';
+    imageUpLoadPreviewImg.style = '';
+    imageUpLoadPreviewImg.classList.add(`effects__preview--${effectName}`);
+});
+
+
 //* Генерация контента на выбраной фотографии
 function generatePictures(picturesItem) {
     let previewElement = pictureTamplate.querySelector('.picture__link').cloneNode(true);
@@ -216,17 +292,6 @@ function generatePictures(picturesItem) {
     });
     return previewElement;
 }
-
-//* Отрисовка нужного количества привью фотографий
-function renderPictures() {
-    for (let i = 1; i < QUANTITY_PICTURES; i++) {
-        fragment.appendChild(generatePictures(pictures[i]));
-    }
-    picturesContainer.appendChild(fragment);
-}
-
-//* Отрисовка
-renderPictures();
 
 //* Закрытие большой фотографии
 pictureClose.addEventListener('click', () => {
