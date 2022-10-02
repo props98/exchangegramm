@@ -66,6 +66,9 @@ const SCALE = {
     step: 25
 };
 
+//* Validation
+let userHashTags = imageSettings.querySelector('.text__hashtags');
+
 
 //* Получение рандомного индекса
 let getRandomNum = function(min, max) {
@@ -82,9 +85,9 @@ let generateRandomComment = function(source) {
     let comments = [];
     let commentsQuantity = getRandomNum(1, source.length);
     let commentsLength = getRandomNum(1, 2);
-    for (let i = 1; i < commentsQuantity; i++) {
+    for (let i = 1; i <= commentsQuantity; i++) {
         comments[i] = '';
-        for (let j = 1; j < commentsLength; j++) {
+        for (let j = 1; j <= commentsLength; j++) {
             comments[i] = getRandomArr(source);
         }
     }
@@ -148,7 +151,7 @@ let showBigPicture = function(picture) {
     commentsContainer.innerHTML = '';
     let commentsFragment = document.createDocumentFragment();
 
-    for (let i = 0; i < picture.comment.length; i++) {
+    for (let i = 1; i < picture.comment.length; i++) {
         commentTemplate.querySelector('.social__picture').src = `img/avatar-${getRandomNum(1, AVATARS)}.svg`;
         commentTemplate.querySelector('.social__text').textContent = picture.comment[i];
         commentsFragment.appendChild(commentTemplate.cloneNode(true));
@@ -163,7 +166,6 @@ let showBigPicture = function(picture) {
 
 //* Закрывает большое фото при нажатии на клавишу ESC
 function onBigPhotoEscPress(e) {
-    console.log('ESC');
     if (e.keyCode === ESC_KEYCODE) {
         e.preventDefault();
         closeBigPhoto();
@@ -266,8 +268,6 @@ scalePin.addEventListener('mouseup', () => {
     imageUpLoadPreviewImg.style.filter = effect;
 });
 
-//TODO Добавить Влидацию хец-тегов
-
 //* Выбор еффекта для фотографии при помощи удаления и добвления класса
 effectsList.addEventListener('change', (evt) => {
     var effectName = evt.target.value;
@@ -279,6 +279,51 @@ effectsList.addEventListener('change', (evt) => {
     imageUpLoadPreviewImg.className = '';
     imageUpLoadPreviewImg.style = '';
     imageUpLoadPreviewImg.classList.add(`effects__preview--${effectName}`);
+});
+
+////////* Валидация Хештегов
+//? Что делает эта функция????
+let checkUniqueValues = function(arr) {
+    let k = 0;
+    while (k < arr.length - 1) {
+        if (arr.indexOf(arr[k], k + 1) > -1) {
+            return false;
+        }
+        k++;
+    }
+    return true;
+};
+
+//* Валидация хэш тега и генерация предупреждающих сообщений
+function validateHashtags(arr) {
+    let arrLowerCase = [];
+
+    for (let i = 0; i < arr.length; ++i) {
+        arrLowerCase[i] = arr[i].toLowerCase();
+    }
+    userHashTags.setCustomValidity('');
+    if (arr.lenth > 3) {
+        userHashTags.setCustomValidity('Хэш-тегов должно быть не больше 3.');
+    }
+    if (!checkUniqueValues(arrLowerCase)) {
+        userHashTags.setCustomValidity('Один и тотже хэш-тег не может быть использован дважды.'); // теги не чувствительны к регистру
+    }
+    for (let j = 0; j < arr.length; ++j) {
+        if (arr[j] === '#') {
+            userHashTags.setCustomValidity('Хэш-тег не может состоять из одной решетки!');
+        } else if (arr[j].charAt(0) !== '#') {
+            userHashTags.setCustomValidity(`Хэш-тег: ${arr[j]} должен начинатся с символа '#'`);
+        } else if (arr[j].slice(1).indexOf('#') !== -1) {
+            userHashTags.setCustomValidity(`Хэш-тег: ${arr[j]} должен быть разделен пробелом`);
+        } else if (arr[j].length > 5) {
+            userHashTags.setCustomValidity(`Максимальная длина одного хэш-тега составляет 5 символов`);
+        }
+    }
+}
+
+userHashTags.addEventListener('input', () => {
+    let hashtagsArr = userHashTags.value.split(' ');
+    validateHashtags(hashtagsArr);
 });
 
 
