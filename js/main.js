@@ -147,11 +147,13 @@ let showBigPicture = function(picture) {
 
     commentsContainer.innerHTML = '';
     let commentsFragment = document.createDocumentFragment();
+
     for (let i = 0; i < picture.comment.length; i++) {
-        commentTemplate.querySelector('.social__picture').src = `img/avatar-${getRandomNum(1, AVATARS)}.svg`
+        commentTemplate.querySelector('.social__picture').src = `img/avatar-${getRandomNum(1, AVATARS)}.svg`;
         commentTemplate.querySelector('.social__text').textContent = picture.comment[i];
-        commentTemplate.appendChild(commentTemplate.cloneNode(true));
+        commentsFragment.appendChild(commentTemplate.cloneNode(true));
     }
+
     commentsContainer.appendChild(commentsFragment);
 
     bigPicture.querySelector('.social__caption').textContent = picture.description;
@@ -161,6 +163,7 @@ let showBigPicture = function(picture) {
 
 //* Закрывает большое фото при нажатии на клавишу ESC
 function onBigPhotoEscPress(e) {
+    console.log('ESC');
     if (e.keyCode === ESC_KEYCODE) {
         e.preventDefault();
         closeBigPhoto();
